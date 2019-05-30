@@ -3,15 +3,14 @@ package com.lucky.thread;
 import com.google.gson.Gson;
 import com.lucky.Server;
 import com.lucky.bean.ChatMsg;
-import com.lucky.bean.GetFile;
 import com.lucky.constant.MsgType;
 import com.lucky.constant.ResponseStatus;
+import com.lucky.file.ServerFile;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
 
@@ -28,10 +27,13 @@ public class ServerSocketThread extends Thread {
     private String message;
     private String chatRoom = "";
     private Gson gson = new Gson();
+    private ServerFile serverFile;
 
-    public ServerSocketThread(Socket socket, Server server) {
+    public ServerSocketThread(Socket socket, Server server, ServerFile serverFile) {
         this.socket = socket;
         this.server = server;
+        this.serverFile = serverFile;
+
         try {
             bis = new BufferedInputStream(socket.getInputStream());//缓冲流
             bos = new BufferedOutputStream(socket.getOutputStream());
@@ -72,8 +74,16 @@ public class ServerSocketThread extends Thread {
     public void sendChatMsg(String msg) {
         sendMsgWithType(MsgType.CHAT, ResponseStatus.OK, msg);
     }
+
+    public void sendFileMsg(String msg) {
+        sendMsgWithType(MsgType.SEND_FILE, ResponseStatus.OK, msg);
+    }
+
     public Socket getSocket() {
         return socket;
+    }
+    public boolean getAlive() {
+        return alive;
     }
 
     /**
@@ -130,7 +140,8 @@ public class ServerSocketThread extends Thread {
                 break;
             case MsgType.SEND_FILE:
                 try {
-                    server.deliverfile(chatRoom, socket);//为了一致，就这样调用函数了
+                    //服务器端创建中转站,获取中转站文件全路径,已经在中转站创建文件
+                    server.deliverfile(chatRoom, socket, serverFile.getServerFile());//为了一致，就这样调用函数了
                 } catch (Exception e) {
                     sendMsgWithType(type, ResponseStatus.FAIL, e.getMessage());
                 }
@@ -157,7 +168,7 @@ public class ServerSocketThread extends Thread {
             alive = false;
             if (socket != null && !socket.isClosed()) {
                 bis.close();
-                bos.close();
+                bos.close();//为什么缓冲流关了，而简单输入输出没关
                 socket.close();
             }
         } catch (IOException e) {

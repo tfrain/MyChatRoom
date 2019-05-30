@@ -1,7 +1,7 @@
 package com.lucky;
 
-import com.lucky.bean.SendFile;
 import com.lucky.constant.MsgType;
+import com.lucky.file.ClientFile;
 import com.lucky.thread.ClientSocketThread;
 import org.apache.log4j.Logger;
 
@@ -20,10 +20,15 @@ public class Client {
     private Socket socket;
     private InputStream is;
     private OutputStream os;
+
+
+    private ClientFile clientFile;
+
     private boolean alive;
     private boolean chatting;  // 是否处于聊天模式，聊天模式中不发送文件
     private String chatRoom;   // 存储当前属于的chat room
 
+    private boolean sendFile;  // 发送文件后客户端的输入流方法，变成数据流
 
     /** Public Methods */
 
@@ -37,10 +42,13 @@ public class Client {
             socket = new Socket(host, port);
             is = socket.getInputStream();
             os = socket.getOutputStream();
+            //是为了客户端线程而存在，如果socket关闭。alive为false，就可以停止客户端线程的一切活动了
+            //同时也为了重连而存在，不然直接判断socket是否存在就可以了
             alive = true;
             chatting = false;
             chatRoom = "";
             Thread socketThread = new ClientSocketThread(this);
+            clientFile = new ClientFile(this);
             socketThread.start();//阻塞语句
             logger.info("Connect to the chat room successfully");
             printInfo();
@@ -74,6 +82,10 @@ public class Client {
         return is;
     }
 
+    public OutputStream getOs() {
+        return os;
+    }
+
     public boolean isAlive() {
         return alive;
     }
@@ -96,6 +108,9 @@ public class Client {
 
     public void setChatRoom(String chatRoom) {
         this.chatRoom = chatRoom;
+    }
+    public ClientFile getClientFile() {
+        return clientFile;
     }
 
     /** Private Methods */
@@ -175,6 +190,7 @@ public class Client {
         }
 
         if (type == MsgType.SEND_FILE) {
+            //以空格为划分线
             String[] splited = msg.split("\\s+");
             if ("".equals(chatRoom)) {
                 logger.info("Please join a chat room first");
@@ -182,15 +198,14 @@ public class Client {
             }
             try {
                 sendMsg(type);//确认是7
-
-                new SendFile(this, splited[1]);//单开文件流
+                clientFile.SendClientFile(splited[1]);//单开文件流
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             logger.info("You have already sent a file");
 
-            return;
+            return;//不至于输出流冲突
         }
 
         if (type == MsgType.QUIT_SYSTEM) {
@@ -283,7 +298,7 @@ public class Client {
         System.out.println("4创建房间: input '#4 {roomName}' to create a chat room");
         System.out.println("5退出聊天: input '#5' to start chatting");
         System.out.println("6关闭本客户端: input '#6' to quit system");
-        System.out.println("7文件传输: input '#7 {sourcePath} {targetPath}' to send a file");
+        System.out.println("7文件传输: input '#7 {sourcePath}' to send a file");
         System.out.println("------------------------------");
     }
 

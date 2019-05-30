@@ -4,13 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lucky.Client;
 import com.lucky.bean.ChatMsg;
+import com.lucky.bean.FileMsg;
 import com.lucky.bean.Room;
 import com.lucky.constant.MsgType;
 import com.lucky.constant.ResponseStatus;
+import com.lucky.file.ClientFile;
 import org.apache.log4j.Logger;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -26,6 +26,7 @@ public class ClientSocketThread extends Thread {
     private boolean alive;
     private byte[] buffer = new byte[1024];
     private String message;
+    ClientFile clientFile;
     private Gson gson = new Gson();//有各自的gson
 
     public ClientSocketThread(Client client) {
@@ -33,6 +34,7 @@ public class ClientSocketThread extends Thread {
         this.socket = client.getSocket();
         this.is = client.getIs();
         alive = client.isAlive();
+        this.clientFile = client.getClientFile();
     }
 
     @Override
@@ -97,7 +99,11 @@ public class ClientSocketThread extends Thread {
                 System.out.println(chatMsg.getUser() + ": " + chatMsg.getMsg() + "    " + chatMsg.getDate().toLocaleString());
                 break;
             case MsgType.SEND_FILE:
-                logger.info("======== 文件接收成功 [File Name：" + fileName + "] [Size：" + getFormatFileSize(fileLength) + "] ========");
+                if(clientFile.getClientFile()) {
+                    FileMsg fileMsg = gson.fromJson(data,FileMsg.class);
+                    logger.info("======== 文件接收成功 [File Name：" + fileMsg.getFileName() + "] [Size：" + fileMsg.getFileSize() + "] [Time：" + fileMsg.getDate().toLocaleString()+"] ========");
+
+                }
                 break;
             default:
                 logger.info("invalid type");

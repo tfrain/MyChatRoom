@@ -1,10 +1,10 @@
 package com.lucky;
 
 import com.google.gson.Gson;
-import com.lucky.bean.GetFile;
+import com.lucky.bean.FileMsg;
 import com.lucky.bean.Room;
 import com.lucky.constant.ErrorMsg;
-import com.lucky.constant.MsgType;
+import com.lucky.file.ServerFile;
 import com.lucky.thread.ServerSocketThread;
 import org.apache.log4j.Logger;
 
@@ -26,7 +26,7 @@ public class Server {
             new HashMap<String, List<ServerSocketThread>>(); // 当前的所有socket线程与聊天室, 操作需要同步
     private Gson gson = new Gson();
     private ServerSocket server;
-    private GetFile getFile;
+    private ServerFile serverFile;
 
     public Server() {
         initFromProperties();
@@ -36,11 +36,13 @@ public class Server {
     public void start() {
         try {
             server = new ServerSocket(port);
+
             alive = true;
             logger.info("SocketServer has started, listening port: " + port);
             while (alive) {
                 Socket socket = server.accept();
-                Thread socketThread = new ServerSocketThread(socket, this);
+                serverFile =new ServerFile(socket,alive);
+                Thread socketThread = new ServerSocketThread(socket, this, serverFile);
                 socketThread.start();
                 count.incrementAndGet();
                 logger.info("Welcome user-" + socketThread.getId() + " joined this chat room. " +
@@ -149,18 +151,20 @@ public class Server {
         }
     }
 
-    public void deliverfile(String roomName, Socket socket) throws Exception {//注意要有抛出异常的throws语句
+    public void deliverfile(String roomName, Socket socket, String pathName) throws Exception {//注意要有抛出异常的throws语句
 
 
         List<ServerSocketThread> sockets = rooms.get(roomName);//向每一个多线程服务端发布信息
         if (sockets == null) {
             throw new Exception(ErrorMsg.ROOM_NOT_EXIST);
         }
-
-        for (ServerSocketThread otherSocket: sockets) {//除了本socket之外，都发送文件
+        //除了本socket之外，都发送文件,同时发送提示信息
+        for (ServerSocketThread otherSocket: sockets) {
 
             if (!otherSocket.getSocket().equals(socket)) {
-                getFile = new GetFile(otherSocket);
+                serverFile.sendServerFile(otherSocket, pathName);
+
+                otherSocket.sendFileMsg(gson.toJson(new FileMsg(serverFile.getFileName(), serverFile.getFileLength(),new Date())));
             }
         }
     }
