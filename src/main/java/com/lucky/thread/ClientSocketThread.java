@@ -27,6 +27,7 @@ public class ClientSocketThread extends Thread {
     private byte[] buffer = new byte[1024];
     private String message;
     ClientFile clientFile;
+    private boolean sendFile;
     private Gson gson = new Gson();//有各自的gson
 
     public ClientSocketThread(Client client) {
@@ -35,11 +36,12 @@ public class ClientSocketThread extends Thread {
         this.is = client.getIs();
         alive = client.isAlive();
         this.clientFile = client.getClientFile();
+        sendFile = client.isSendFile();
     }
 
     @Override
     public void run() {
-        while (alive) {  // 接收客户端socket发送的消息
+        while (alive && !sendFile) {  // 接收客户端socket发送的消息,如果发文件，要关闭这里的监听
             try {
                 int len = is.read(buffer);  // 假设数据都是一次读完，不存在组包
                 if (len == -1) {  // 客户端socket已经关闭
@@ -99,11 +101,13 @@ public class ClientSocketThread extends Thread {
                 System.out.println(chatMsg.getUser() + ": " + chatMsg.getMsg() + "    " + chatMsg.getDate().toLocaleString());
                 break;
             case MsgType.SEND_FILE:
-                if(clientFile.getClientFile()) {
-                    FileMsg fileMsg = gson.fromJson(data,FileMsg.class);
-                    logger.info("======== 文件接收成功 [File Name：" + fileMsg.getFileName() + "] [Size：" + fileMsg.getFileSize() + "] [Time：" + fileMsg.getDate().toLocaleString()+"] ========");
-
-                }
+                // if(clientFile.getClientFile()) {
+                //     FileMsg fileMsg = gson.fromJson(data,FileMsg.class);
+                //     logger.info("======== 文件接收成功 [File Name：" + fileMsg.getFileName() + "] [Size：" + fileMsg.getFileSize() + "] [Time：" + fileMsg.getDate().toLocaleString()+"] ========");
+                //
+                // }
+                logger.info(data);
+                client.setSendFile(true);
                 break;
             default:
                 logger.info("invalid type");

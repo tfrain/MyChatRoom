@@ -46,6 +46,7 @@ public class Client {
             //同时也为了重连而存在，不然直接判断socket是否存在就可以了
             alive = true;
             chatting = false;
+            sendFile = false;
             chatRoom = "";
             Thread socketThread = new ClientSocketThread(this);
             clientFile = new ClientFile(this);
@@ -111,6 +112,14 @@ public class Client {
     }
     public ClientFile getClientFile() {
         return clientFile;
+    }
+
+    public boolean isSendFile() {
+        return sendFile;
+    }
+
+    public void setSendFile(boolean sendFile) {
+        this.sendFile = sendFile;
     }
 
     /** Private Methods */
@@ -197,14 +206,14 @@ public class Client {
                 return;
             }
             try {
+                if(sendFile) {
+                    clientFile.SendClientFile(splited[1]);
+                }
                 sendMsg(type);//确认是7
-                clientFile.SendClientFile(splited[1]);//单开文件流
+                //clientFile.SendClientFile(splited[1]);//单开文件流
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            logger.info("You have already sent a file");
-
             return;//不至于输出流冲突
         }
 

@@ -54,7 +54,7 @@ public class ClientFile {
                 File file = new File(sourcePath);
                 if(file.exists()) {
                     fis = new FileInputStream(file);
-                    dos = new DataOutputStream(client.getOs());
+                    dos = new DataOutputStream(client.getOs());//使用同一个输入流
 
                     //文件名、长度
                     dos.writeUTF(file.getName());
@@ -68,6 +68,7 @@ public class ClientFile {
                     int length = 0;
                     long progress = 0;
                     while((length  = fis.read(bytes, 0, bytes.length)) != -1) {
+                        //dos.writeBytes(bytes.toString());
                         dos.write(bytes, 0, length);
                         dos.flush();
                         progress += length;
@@ -98,11 +99,7 @@ public class ClientFile {
                 if (!directory.exists()) {
                     directory.mkdir();
                 }
-            /*
-            todo 应该要和线程一端进行交互，file 要在客户端创建，这些东西应该通过多线程服务端进行中转，建议每一个服务端都配一个
-            TODo getfile实例，然后不断进行交互
 
-             */
 
                 File file = new File(directory.getAbsolutePath() + File.separatorChar );
                 fos = new FileOutputStream(file);

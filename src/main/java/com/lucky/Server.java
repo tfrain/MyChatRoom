@@ -151,7 +151,7 @@ public class Server {
         }
     }
 
-    public void deliverfile(String roomName, Socket socket, String pathName) throws Exception {//注意要有抛出异常的throws语句
+    public void deliverfile(String roomName, Socket socket, String fileName) throws Exception {//注意要有抛出异常的throws语句
 
 
         List<ServerSocketThread> sockets = rooms.get(roomName);//向每一个多线程服务端发布信息
@@ -162,9 +162,9 @@ public class Server {
         for (ServerSocketThread otherSocket: sockets) {
 
             if (!otherSocket.getSocket().equals(socket)) {
-                serverFile.sendServerFile(otherSocket, pathName);
-
-                otherSocket.sendFileMsg(gson.toJson(new FileMsg(serverFile.getFileName(), serverFile.getFileLength(),new Date())));
+                serverFile.sendServerFile(otherSocket);
+                logger.info("user-" + otherSocket.getId() + " has been sent a file named " + fileName +" at " + roomName);
+                //otherSocket.sendFileMsg(gson.toJson(new FileMsg(serverFile.getFileName(), serverFile.getFileLength(),new Date())));
             }
         }
     }

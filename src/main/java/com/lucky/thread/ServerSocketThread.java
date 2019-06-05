@@ -10,6 +10,9 @@ import org.apache.log4j.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Date;
@@ -22,19 +25,36 @@ public class ServerSocketThread extends Thread {
     private Server server;
     private BufferedInputStream bis;
     private BufferedOutputStream bos;
+    private boolean sendFile;
+   // private DataInputStream dis;
+    //private DataOutputStream dos;
+
+
     private boolean alive;
     private byte[] buffer = new byte[1024];
     private String message;
     private String chatRoom = "";
     private Gson gson = new Gson();
     private ServerFile serverFile;
+    //private String fileName;
 
     public ServerSocketThread(Socket socket, Server server, ServerFile serverFile) {
         this.socket = socket;
         this.server = server;
         this.serverFile = serverFile;
+        sendFile = false;
 
         try {
+            // todo 采用确认的方式，设置并传递变量，等客户端接受服务端同意的消息后，服务端使用变量开启数据流，不使用缓冲流，
+            // todo 并不经过麻烦的判断，直接在服务端用循环一步步传给客户端大容量文件，客户端则立刻进行写入文件操作，
+            // todo 只有变量确认进行文件传输，才使用判断内容，和前面的方式衔接在一起，函数名应该叫getsend方法，并发送文件成功的提示给客户端
+            // todo while 语句下面给输出流传递接受完毕的指令，都要在接受完将变量设置为false，这样才能继续正常的聊天，都要关闭相应的数据流
+            // todo 如果想通用一套代码，如何搞定文件名，如何利用缓冲流，得到大文件，有相应的函数实现吗?
+            // dis = new DataInputStream(socket.getInputStream());//本套接字
+            // fileName = dis.readUTF();
+            // if(fileName == null) {
+            //
+            // }
             bis = new BufferedInputStream(socket.getInputStream());//缓冲流
             bos = new BufferedOutputStream(socket.getOutputStream());
         } catch (IOException e) {
@@ -46,7 +66,7 @@ public class ServerSocketThread extends Thread {
 
     @Override
     public void run() {
-        while (alive) {  // 接收客户端socket发送的消息
+        while (alive && !sendFile) {  // 接收客户端socket发送的消息
             try {
                 int len = bis.read(buffer);  // 假设数据都是一次读完，不存在组包
                 if (len == -1) {  // 客户端socket已经关闭,服务端也相应关闭
@@ -141,7 +161,14 @@ public class ServerSocketThread extends Thread {
             case MsgType.SEND_FILE:
                 try {
                     //服务器端创建中转站,获取中转站文件全路径,已经在中转站创建文件
-                    server.deliverfile(chatRoom, socket, serverFile.getServerFile());//为了一致，就这样调用函数了
+                    if(sendFile) {
+                        String Ok = "The server is ready";
+                        sendMsgWithType(MsgType.SEND_FILE, ResponseStatus.OK, Ok);
+                        sendFile = true;
+                        server.deliverfile(chatRoom, socket,serverFile.getServerFile(sendFile));//为了一致，就这样调用函数了
+                    }
+                    // bis.close();todo 包装对象没有流，我认为没必要关闭
+                    // bos.close();
                 } catch (Exception e) {
                     sendMsgWithType(type, ResponseStatus.FAIL, e.getMessage());
                 }
@@ -168,7 +195,7 @@ public class ServerSocketThread extends Thread {
             alive = false;
             if (socket != null && !socket.isClosed()) {
                 bis.close();
-                bos.close();//为什么缓冲流关了，而简单输入输出没关
+                bos.close();//为什么缓冲流关了，而简单输入输出没关,因为简单输入输出一直要进行
                 socket.close();
             }
         } catch (IOException e) {
