@@ -55,8 +55,12 @@ public class ServerSocketThread extends Thread {
             // if(fileName == null) {
             //
             // }
-            bis = new BufferedInputStream(socket.getInputStream());//缓冲流
-            bos = new BufferedOutputStream(socket.getOutputStream());
+            //todo 此处可疑
+            if(!sendFile) {
+                bis = new BufferedInputStream(socket.getInputStream());//缓冲流
+                bos = new BufferedOutputStream(socket.getOutputStream());
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -66,8 +70,10 @@ public class ServerSocketThread extends Thread {
 
     @Override
     public void run() {
+        //todo 这里还在接收字节流，问题在这
         while (alive && !sendFile) {  // 接收客户端socket发送的消息
             try {
+                System.out.println("我头铁，不然数据流产生");
                 int len = bis.read(buffer);  // 假设数据都是一次读完，不存在组包
                 if (len == -1) {  // 客户端socket已经关闭,服务端也相应关闭
                     close();
@@ -97,6 +103,7 @@ public class ServerSocketThread extends Thread {
 
     public void sendFileMsg(String msg) {
         sendMsgWithType(MsgType.SEND_FILE, ResponseStatus.OK, msg);
+        setSendFile(true);//todo 每一个都设置为true，则断流
     }
 
     public Socket getSocket() {
@@ -104,6 +111,10 @@ public class ServerSocketThread extends Thread {
     }
     public boolean getAlive() {
         return alive;
+    }
+
+    public void setSendFile(boolean sendFile) {
+        this.sendFile = sendFile;
     }
 
     /**
@@ -161,11 +172,12 @@ public class ServerSocketThread extends Thread {
             case MsgType.SEND_FILE:
                 try {
                     //服务器端创建中转站,获取中转站文件全路径,已经在中转站创建文件
-                    if(sendFile) {
+                    if(!sendFile) {
                         String Ok = "The server is ready";
-                        sendMsgWithType(MsgType.SEND_FILE, ResponseStatus.OK, Ok);
+                        server.deliverFileMsg(chatRoom, Ok);
                         sendFile = true;
                         server.deliverfile(chatRoom, socket,serverFile.getServerFile(sendFile));//为了一致，就这样调用函数了
+
                     }
                     // bis.close();todo 包装对象没有流，我认为没必要关闭
                     // bos.close();
@@ -184,6 +196,7 @@ public class ServerSocketThread extends Thread {
             sb.append(type).append(status).append(data);
             bos.write(sb.toString().getBytes());
             bos.flush();     // 使用bufferOutputStream要记得flush,不然就没用到缓冲的作用
+            System.out.println(sendFile);//测试sendFile的值
         } catch (IOException e) {
             close();
             e.printStackTrace();

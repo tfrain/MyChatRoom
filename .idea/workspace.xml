@@ -5,16 +5,10 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lucky/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lucky/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lucky/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lucky/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lucky/bean/FileMsg.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lucky/bean/FileMsg.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lucky/file/ClientFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lucky/file/ClientFile.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lucky/file/ServerFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lucky/file/ServerFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lucky/thread/ClientSocketThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lucky/thread/ClientSocketThread.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lucky/thread/ServerSocketThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lucky/thread/ServerSocketThread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/Client$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/Client.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/file/ClientFile.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/lucky/file/ClientFile.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/thread/ClientSocketThread$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/thread/ClientSocketThread.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/lucky/thread/ServerSocketThread.class" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -31,28 +25,29 @@
     <session id="1313513323">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="9" />
+          <entry key="project.closed" value="11" />
           <entry key="project.open.time.10" value="2" />
           <entry key="project.open.time.18" value="1" />
           <entry key="project.open.time.20" value="1" />
-          <entry key="project.open.time.22" value="1" />
+          <entry key="project.open.time.22" value="2" />
+          <entry key="project.open.time.25" value="1" />
           <entry key="project.open.time.26" value="1" />
           <entry key="project.open.time.28" value="1" />
           <entry key="project.open.time.32" value="1" />
           <entry key="project.open.time.6" value="1" />
-          <entry key="project.opened" value="9" />
+          <entry key="project.opened" value="11" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="CLASS" value="2" />
-          <entry key="JAVA" value="58" />
+          <entry key="JAVA" value="61" />
           <entry key="Properties" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="6609" />
+          <entry key="JAVA" value="7332" />
         </counts>
       </usages-collector>
     </session>
@@ -62,8 +57,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/main/ClientStart.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="12" selection-start-line="12" selection-end-line="12" />
+            <state relative-caret-position="120">
+              <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
             </state>
           </provider>
         </entry>
@@ -72,7 +67,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/main/ServerStart.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="240">
-              <caret line="10" column="1" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
+              <caret line="10" column="1" lean-forward="true" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -80,8 +75,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/Client.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2064">
-              <caret line="209" column="40" selection-start-line="209" selection-start-column="40" selection-end-line="209" selection-end-column="40" />
+            <state relative-caret-position="2738">
+              <caret line="120" column="16" selection-start-line="120" selection-start-column="16" selection-end-line="120" selection-end-column="16" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -92,8 +87,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/thread/ClientSocketThread.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="570">
-              <caret line="108" column="33" selection-start-line="108" selection-start-column="33" selection-end-line="108" selection-end-column="33" />
+            <state relative-caret-position="-1122">
+              <caret line="53" selection-start-line="53" selection-end-line="53" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -104,8 +99,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/file/ClientFile.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1048">
-              <caret line="45" column="16" selection-start-line="45" selection-start-column="16" selection-end-line="45" selection-end-column="16" />
+            <state relative-caret-position="-450">
+              <caret line="50" column="20" lean-forward="true" selection-start-line="50" selection-start-column="20" selection-end-line="50" selection-end-column="20" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -116,20 +111,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/Server.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3434">
-              <caret line="164" column="35" lean-forward="true" selection-start-line="164" selection-start-column="35" selection-end-line="164" selection-end-column="35" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/thread/ServerSocketThread.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="536">
-              <caret line="167" column="93" selection-start-line="167" selection-start-column="93" selection-end-line="167" selection-end-column="93" />
+            <state relative-caret-position="3096">
+              <caret line="159" column="25" selection-start-line="159" selection-start-column="25" selection-end-line="159" selection-end-column="25" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -138,10 +121,22 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/thread/ServerSocketThread.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1230">
+              <caret line="111" column="31" lean-forward="true" selection-start-line="111" selection-start-column="31" selection-end-line="111" selection-end-column="31" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/file/ServerFile.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="104">
-              <caret line="24" column="27" lean-forward="true" selection-start-line="24" selection-start-column="27" selection-end-line="24" selection-end-column="27" />
+            <state relative-caret-position="-618">
+              <caret line="37" column="37" lean-forward="true" selection-start-line="37" selection-start-column="37" selection-end-line="37" selection-end-column="37" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -174,14 +169,14 @@
         <option value="$PROJECT_DIR$/src/main/java/com/lucky/constant/MsgType.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/lucky/bean/GetFile.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/lucky/bean/ServerMsg.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/lucky/bean/FileMsg.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/lucky/bean/SendFile.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/lucky/file/ClientFile.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/lucky/thread/ClientSocketThread.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/lucky/Client.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/lucky/Server.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/lucky/thread/ServerSocketThread.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/lucky/file/ServerFile.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/bean/FileMsg.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/Server.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/file/ClientFile.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lucky/thread/ServerSocketThread.java" />
       </list>
     </option>
   </component>
@@ -327,14 +322,14 @@
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1559488419158" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1559832753241" />
     <property name="last_opened_file_path" value="$USER_HOME$/JavaIDEA/ForestBlog" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -355,7 +350,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.ClientStart">
+  <component name="RunManager" selected="Application.ServerStart">
     <configuration name="ClientStart" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.lucky.main.ClientStart" />
       <module name="ChatRoom" />
@@ -412,11 +407,13 @@
       <workItem from="1559461706657" duration="10497000" />
       <workItem from="1559659099201" duration="2449000" />
       <workItem from="1559720299732" duration="8807000" />
+      <workItem from="1559741167898" duration="117000" />
+      <workItem from="1559788421125" duration="9108000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="84503000" />
+    <option name="totallyTimeSpent" value="93728000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -429,6 +426,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1440" y="28" width="1920" height="1052" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Image Layers" order="0" />
       <window_info id="Designer" order="1" />
@@ -436,10 +434,10 @@
       <window_info id="Capture Tool" order="3" />
       <window_info id="Favorites" order="4" side_tool="true" />
       <window_info id="Structure" order="5" side_tool="true" weight="0.25" />
-      <window_info active="true" content_ui="combo" id="Project" order="6" visible="true" weight="0.15085287" />
+      <window_info content_ui="combo" id="Project" order="6" visible="true" weight="0.15405117" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.4518919" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.39027026" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -519,13 +517,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/constant/MsgType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="7" column="20" lean-forward="true" selection-start-line="7" selection-start-column="20" selection-end-line="7" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/Saladict/jdk/jdk-10.0.2/lib/src.zip!/java.base/java/lang/Thread.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="298">
@@ -582,13 +573,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/bean/FileMsg.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="9" selection-start-line="9" selection-end-line="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/bean/ServerMsg.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/bean/GetFile.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/bean/SendFile.java" />
@@ -599,24 +583,38 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/constant/MsgType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="9" column="9" selection-start-line="9" selection-start-column="9" selection-end-line="9" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/bean/FileMsg.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="20" column="29" lean-forward="true" selection-start-line="20" selection-start-column="29" selection-end-line="20" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/bean/ChatMsg.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="384">
-          <caret line="16" column="20" selection-start-line="16" selection-start-column="20" selection-end-line="16" selection-end-column="20" />
+        <state relative-caret-position="240">
+          <caret line="10" column="18" lean-forward="true" selection-start-line="10" selection-start-column="18" selection-end-line="10" selection-end-column="30" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/main/ClientStart.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="12" selection-start-line="12" selection-end-line="12" />
+        <state relative-caret-position="120">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/file/ClientFile.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/Client.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1048">
-          <caret line="45" column="16" selection-start-line="45" selection-start-column="16" selection-end-line="45" selection-end-column="16" />
+        <state relative-caret-position="2738">
+          <caret line="120" column="16" selection-start-line="120" selection-start-column="16" selection-end-line="120" selection-end-column="16" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -625,8 +623,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/thread/ClientSocketThread.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="570">
-          <caret line="108" column="33" selection-start-line="108" selection-start-column="33" selection-end-line="108" selection-end-column="33" />
+        <state relative-caret-position="-1122">
+          <caret line="53" selection-start-line="53" selection-end-line="53" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/file/ClientFile.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-450">
+          <caret line="50" column="20" lean-forward="true" selection-start-line="50" selection-start-column="20" selection-end-line="50" selection-end-column="20" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -636,34 +644,14 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/main/ServerStart.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
-          <caret line="10" column="1" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/Client.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2064">
-          <caret line="209" column="40" selection-start-line="209" selection-start-column="40" selection-end-line="209" selection-end-column="40" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+          <caret line="10" column="1" lean-forward="true" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/Server.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3434">
-          <caret line="164" column="35" lean-forward="true" selection-start-line="164" selection-start-column="35" selection-end-line="164" selection-end-column="35" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/thread/ServerSocketThread.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="536">
-          <caret line="167" column="93" selection-start-line="167" selection-start-column="93" selection-end-line="167" selection-end-column="93" />
+        <state relative-caret-position="3096">
+          <caret line="159" column="25" selection-start-line="159" selection-start-column="25" selection-end-line="159" selection-end-column="25" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -672,8 +660,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/file/ServerFile.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="104">
-          <caret line="24" column="27" lean-forward="true" selection-start-line="24" selection-start-column="27" selection-end-line="24" selection-end-column="27" />
+        <state relative-caret-position="-618">
+          <caret line="37" column="37" lean-forward="true" selection-start-line="37" selection-start-column="37" selection-end-line="37" selection-end-column="37" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/lucky/thread/ServerSocketThread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1230">
+          <caret line="111" column="31" lean-forward="true" selection-start-line="111" selection-start-column="31" selection-end-line="111" selection-end-column="31" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

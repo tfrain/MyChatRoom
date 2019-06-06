@@ -4,22 +4,22 @@ import java.util.Date;
 
 public class FileMsg {
 
-    private String fileName;
-    private long fileSize;
+    private String usr;
+    private String word;
     private Date date;
 
-    public FileMsg(String fileName, long fileSize, Date date) {
-        this.fileName = fileName;
-        this.fileSize = fileSize;
+    public FileMsg(String usr, String word, Date date) {
+        this.usr = usr;
+        this.word = word;
         this.date = date;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getUsr() {
+        return usr;
     }
 
-    public long getFileSize() {
-        return fileSize;
+    public String getWord() {
+        return word;
     }
 
     public Date getDate() {

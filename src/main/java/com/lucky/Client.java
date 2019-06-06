@@ -207,7 +207,8 @@ public class Client {
             }
             try {
                 if(sendFile) {
-                    clientFile.SendClientFile(splited[1]);
+                    clientFile.SendClientFile(splited[1], sendFile);
+                    sendFile = false;
                 }
                 sendMsg(type);//确认是7
                 //clientFile.SendClientFile(splited[1]);//单开文件流

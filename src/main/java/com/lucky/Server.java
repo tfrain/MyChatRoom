@@ -151,6 +151,16 @@ public class Server {
         }
     }
 
+    public void deliverFileMsg(String roomName, String msg) throws Exception {
+        List<ServerSocketThread> sockets = rooms.get(roomName);//向每一个多线程发布信息
+        if (sockets == null) {
+            throw new Exception(ErrorMsg.ROOM_NOT_EXIST);
+        }
+        for (ServerSocketThread socket: sockets) {//每一个都发布信息
+            socket.sendFileMsg(msg);
+        }
+    }
+
     public void deliverfile(String roomName, Socket socket, String fileName) throws Exception {//注意要有抛出异常的throws语句
 
 
@@ -162,6 +172,7 @@ public class Server {
         for (ServerSocketThread otherSocket: sockets) {
 
             if (!otherSocket.getSocket().equals(socket)) {
+                System.out.println("可以向异客户端发文件");
                 serverFile.sendServerFile(otherSocket);
                 logger.info("user-" + otherSocket.getId() + " has been sent a file named " + fileName +" at " + roomName);
                 //otherSocket.sendFileMsg(gson.toJson(new FileMsg(serverFile.getFileName(), serverFile.getFileLength(),new Date())));

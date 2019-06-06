@@ -27,6 +27,7 @@ public class ClientFile {
     private DataOutputStream dos;//对我而言，好处是传文件名
     private Socket socket;
     private  boolean alive;
+    private boolean sendFile;
 
 
     static {
@@ -43,13 +44,11 @@ public class ClientFile {
         alive = client.isAlive();
     }
 
-    public void SendClientFile(String sourcePath) throws Exception {
+    public void SendClientFile(String sourcePath, boolean sendFile) throws Exception {
 
-        this.client = client;
-        this.socket = client.getSocket();
-        alive = client.isAlive();
+        this.sendFile = sendFile;
 
-        if(alive) {//因为只一次，所以 alive 的意义不大,不用在while语句中添加
+        if(alive && sendFile) {//因为只一次，所以 alive 的意义不大,不用在while语句中添加
             try {//都放到try catch块里
                 File file = new File(sourcePath);
                 if(file.exists()) {
@@ -75,6 +74,7 @@ public class ClientFile {
                         logger.info("| " + (100*progress/file.length()) + "% |");
                     }
                     logger.info("======== 文件传输成功 ========");
+                    getClientFile();
                 }
             } catch (Exception e) {
                 e.printStackTrace();//考虑使用报错良好的报错功能
@@ -90,10 +90,13 @@ public class ClientFile {
 
     public boolean getClientFile() {
 
+        logger.info("============================");
+        logger.info("======== 准备接收文件 ========");
             try {
                 dis = new DataInputStream(socket.getInputStream());//都不是本套接字
 
-
+                String fileName = dis.readUTF();
+                long fileLength = dis.readLong();
 
                 File directory = new File("/home/wei/file");
                 if (!directory.exists()) {
@@ -107,11 +110,13 @@ public class ClientFile {
                 // 开始接收文件
                 byte[] bytes = new byte[1024];
                 int length = 0;
-                while ((length = dis.read(bytes, 0, bytes.length)) != -1) {
+                while (sendFile && (length = dis.read(bytes, 0, bytes.length)) != -1) {
                     fos.write(bytes, 0, length);
                     fos.flush();
 
                 }
+                logger.info("======== 文件接收成功 [File Name：" + fileName + "] [Size：" + getFormatFileSize(fileLength) + "] ========");
+                sendFile = false;
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
