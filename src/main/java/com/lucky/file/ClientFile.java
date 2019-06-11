@@ -44,7 +44,7 @@ public class ClientFile {
         alive = client.isAlive();
     }
 
-    public void SendClientFile(String sourcePath, boolean sendFile) throws Exception {
+    public boolean SendClientFile(String sourcePath, boolean sendFile) throws Exception {
 
         this.sendFile = sendFile;
 
@@ -74,26 +74,26 @@ public class ClientFile {
                         logger.info("| " + (100*progress/file.length()) + "% |");
                     }
                     logger.info("======== 文件传输成功 ========");
-                    getClientFile();
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();//考虑使用报错良好的报错功能
-            } finally {
+            } finally {//发送后立即关闭
                 if(fis != null)
                     fis.close();
                 if(dos != null)
                     dos.close();
             }
         }
-
+        return true;
     }
 
-    public boolean getClientFile() {
+    public void getClientFile() {
 
         logger.info("============================");
         logger.info("======== 准备接收文件 ========");
             try {
-                dis = new DataInputStream(socket.getInputStream());//都不是本套接字
+                dis = new DataInputStream(client.getIs());//都不是本套接字
 
                 String fileName = dis.readUTF();
                 long fileLength = dis.readLong();
@@ -104,7 +104,8 @@ public class ClientFile {
                 }
 
 
-                File file = new File(directory.getAbsolutePath() + File.separatorChar );
+                File file = new File(directory.getAbsolutePath() + "/" + fileName);
+                System.out.println(file);
                 fos = new FileOutputStream(file);
 
                 // 开始接收文件
@@ -117,9 +118,10 @@ public class ClientFile {
                 }
                 logger.info("======== 文件接收成功 [File Name：" + fileName + "] [Size：" + getFormatFileSize(fileLength) + "] ========");
                 sendFile = false;
+                client.setSendFile(false);//确保接收文件的客户端接收完毕后可以正常聊天
             } catch (Exception e) {
                 e.printStackTrace();
-            } finally {
+             } finally {
                 try {
                     if (fos != null)
                         fos.close();
@@ -128,7 +130,6 @@ public class ClientFile {
                 } catch (Exception e) {
                 }
             }
-            return true;
         }
 
     /**

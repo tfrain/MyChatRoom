@@ -14,6 +14,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Date;
 
@@ -26,6 +28,8 @@ public class ServerSocketThread extends Thread {
     private BufferedInputStream bis;
     private BufferedOutputStream bos;
     private boolean sendFile;
+    private InputStream is;
+    private OutputStream os;
    // private DataInputStream dis;
     //private DataOutputStream dos;
 
@@ -45,20 +49,16 @@ public class ServerSocketThread extends Thread {
         sendFile = false;
 
         try {
-            // todo 采用确认的方式，设置并传递变量，等客户端接受服务端同意的消息后，服务端使用变量开启数据流，不使用缓冲流，
-            // todo 并不经过麻烦的判断，直接在服务端用循环一步步传给客户端大容量文件，客户端则立刻进行写入文件操作，
-            // todo 只有变量确认进行文件传输，才使用判断内容，和前面的方式衔接在一起，函数名应该叫getsend方法，并发送文件成功的提示给客户端
-            // todo while 语句下面给输出流传递接受完毕的指令，都要在接受完将变量设置为false，这样才能继续正常的聊天，都要关闭相应的数据流
-            // todo 如果想通用一套代码，如何搞定文件名，如何利用缓冲流，得到大文件，有相应的函数实现吗?
             // dis = new DataInputStream(socket.getInputStream());//本套接字
             // fileName = dis.readUTF();
             // if(fileName == null) {
             //
             // }
-            //todo 此处可疑
             if(!sendFile) {
-                bis = new BufferedInputStream(socket.getInputStream());//缓冲流
-                bos = new BufferedOutputStream(socket.getOutputStream());
+                is = socket.getInputStream();
+                os = socket.getOutputStream();
+                bis = new BufferedInputStream(is);//缓冲流
+                bos = new BufferedOutputStream(os);
             }
 
         } catch (IOException e) {
@@ -70,10 +70,9 @@ public class ServerSocketThread extends Thread {
 
     @Override
     public void run() {
-        //todo 这里还在接收字节流，问题在这
         while (alive && !sendFile) {  // 接收客户端socket发送的消息
             try {
-                System.out.println("我头铁，不然数据流产生");
+                System.out.println("聊天线程在接收信息");
                 int len = bis.read(buffer);  // 假设数据都是一次读完，不存在组包
                 if (len == -1) {  // 客户端socket已经关闭,服务端也相应关闭
                     close();
@@ -103,7 +102,15 @@ public class ServerSocketThread extends Thread {
 
     public void sendFileMsg(String msg) {
         sendMsgWithType(MsgType.SEND_FILE, ResponseStatus.OK, msg);
-        setSendFile(true);//todo 每一个都设置为true，则断流
+        setSendFile(true);
+    }
+
+    public InputStream getIs() {
+        return is;
+    }
+
+    public OutputStream getOs() {
+        return os;
     }
 
     public Socket getSocket() {
@@ -175,11 +182,13 @@ public class ServerSocketThread extends Thread {
                     if(!sendFile) {
                         String Ok = "The server is ready";
                         server.deliverFileMsg(chatRoom, Ok);
-                        sendFile = true;
-                        server.deliverfile(chatRoom, socket,serverFile.getServerFile(sendFile));//为了一致，就这样调用函数了
-
+                        System.out.println("第二遍服务端没问题");
+                        setSendFile(true);//确保这里不会接收信息
+                        server.deliverfile(chatRoom, socket,serverFile.getServerFile(true));
+                        setSendFile(false);
                     }
-                    // bis.close();todo 包装对象没有流，我认为没必要关闭
+
+                    // bis.close();
                     // bos.close();
                 } catch (Exception e) {
                     sendMsgWithType(type, ResponseStatus.FAIL, e.getMessage());
@@ -192,11 +201,13 @@ public class ServerSocketThread extends Thread {
     //不聊天就只是普通的多线程服务端和客户端输入输出流进行交流，不需要分发消息
     private void sendMsgWithType(char type, char status, String data) {
         try {
-            StringBuilder sb = new StringBuilder();
-            sb.append(type).append(status).append(data);
-            bos.write(sb.toString().getBytes());
-            bos.flush();     // 使用bufferOutputStream要记得flush,不然就没用到缓冲的作用
-            System.out.println(sendFile);//测试sendFile的值
+            if(!sendFile) {//确保异客户端写文件不冲突
+
+                StringBuilder sb = new StringBuilder();
+                sb.append(type).append(status).append(data);
+                bos.write(sb.toString().getBytes());
+                bos.flush();     // 使用bufferOutputStream要记得flush,不然就没用到缓冲的作用
+            }
         } catch (IOException e) {
             close();
             e.printStackTrace();

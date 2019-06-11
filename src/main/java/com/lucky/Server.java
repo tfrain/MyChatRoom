@@ -150,7 +150,9 @@ public class Server {
             socket.sendChatMsg(msg);
         }
     }
-
+    /**
+     * 分发文件信息
+     */
     public void deliverFileMsg(String roomName, String msg) throws Exception {
         List<ServerSocketThread> sockets = rooms.get(roomName);//向每一个多线程发布信息
         if (sockets == null) {
@@ -208,8 +210,6 @@ public class Server {
             public void run() {
                 logger.info("Shutdown hook");
                 try {
-                    // todo close all socket
-
                     if (!server.isClosed()) {
                         server.close();
                     }

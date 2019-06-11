@@ -28,10 +28,10 @@ public class ServerFile {
 
     public String getServerFile(boolean sendFile) {
         this.sendFile = sendFile;
-        System.out.println("服务端开始接收文件字节流");
+        System.out.println("服务端开始接收文件字节流,业务聊天流应当关闭");
         try {
             //此处可疑
-            dis = new DataInputStream(socket.getInputStream());//本套接字
+            dis = new DataInputStream(socket.getInputStream());
             dos = new DataOutputStream(socket.getOutputStream());
 
             // 文件名和长度
@@ -65,6 +65,7 @@ public class ServerFile {
     public void sendServerFile(ServerSocketThread otherSocket) throws Exception{//这里需要抛出异常，这应当是
 
         this.socket = otherSocket.getSocket();
+        otherSocket.setSendFile(true);
 
         if(alive && sendFile) {//因为只一次，所以 alive 的意义不大,不用在while语句中添加
             try {//都放到try catch块里
@@ -79,19 +80,23 @@ public class ServerFile {
                 //再进行切割感觉意义不大，就没有实现
                 //todo 可以提示哪个用户传文件，哪个用户获取文件
                 //todo 将fileContent内容转换为byte传输过去
-                byte[] bytes;
-                bytes = fileContent.toString().getBytes();
-                dos.write(bytes);//todo 咨询老师，有没有传递大文件的好方法，将Stringbuilder切割成byte,这里sendFile立刻设置为false，会不妥
+                byte[] bytesl;
+                bytesl = fileContent.toString().getBytes();
+
+                //todo 这里有问题
+                System.out.println(bytesl);
+                dos.write(bytesl);//todo 咨询老师，有没有传递大文件的好方法，将Stringbuilder切割成byte,这里sendFile立刻设置为false，会不妥
                 dos.flush();
                 sendFile = false;
                 System.out.println("异服务端发文件成功！");
+                otherSocket.setSendFile(false);
             } catch (Exception e) {
                 e.printStackTrace();//考虑使用报错良好的报错功能
             } finally {
                 // if(fis != null)
                 //     fis.close();
                 if(dos != null)
-                    dos.close();
+                   dos.close();
             }
         }
     }

@@ -24,6 +24,11 @@ public class Client {
 
     private ClientFile clientFile;
 
+    public void setSendClient(boolean sendClient) {
+        this.sendClient = sendClient;
+    }
+
+    private boolean sendClient;
     private boolean alive;
     private boolean chatting;  // 是否处于聊天模式，聊天模式中不发送文件
     private String chatRoom;   // 存储当前属于的chat room
@@ -47,9 +52,11 @@ public class Client {
             alive = true;
             chatting = false;
             sendFile = false;
+            sendClient = false;
             chatRoom = "";
-            Thread socketThread = new ClientSocketThread(this);
             clientFile = new ClientFile(this);
+            Thread socketThread = new ClientSocketThread(this);
+            //clientFile = new ClientFile(this);这个文件要在多线程之前要么会报错为空指针
             socketThread.start();//阻塞语句
             logger.info("Connect to the chat room successfully");
             printInfo();
@@ -93,6 +100,10 @@ public class Client {
 
     public void setAlive(boolean alive) {
         this.alive = alive;
+    }
+
+    public boolean isSendClient() {
+        return sendClient;
     }
 
     public boolean isChatting() {
@@ -207,10 +218,12 @@ public class Client {
             }
             try {
                 if(sendFile) {
-                    clientFile.SendClientFile(splited[1], sendFile);
-                    sendFile = false;
+                    sendClient = clientFile.SendClientFile(splited[1], sendFile);
+                    sendFile = false;//确保发送文件端sendFile为false,因为发送端不可能接收文件
+                } else {
+                    sendMsg(type);//确认是7
+                    setSendClient(true);//确保发送文件 客户端不会开启接收文件流
                 }
-                sendMsg(type);//确认是7
                 //clientFile.SendClientFile(splited[1]);//单开文件流
             } catch (Exception e) {
                 e.printStackTrace();
@@ -308,7 +321,7 @@ public class Client {
         System.out.println("4创建房间: input '#4 {roomName}' to create a chat room");
         System.out.println("5退出聊天: input '#5' to start chatting");
         System.out.println("6关闭本客户端: input '#6' to quit system");
-        System.out.println("7文件传输: input '#7 {sourcePath}' to send a file");
+        System.out.println("7文件传输: input '#7 then #7 {sourcePath}' to send a file");
         System.out.println("------------------------------");
     }
 

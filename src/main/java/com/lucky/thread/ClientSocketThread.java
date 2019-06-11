@@ -36,12 +36,12 @@ public class ClientSocketThread extends Thread {
         this.is = client.getIs();
         alive = client.isAlive();
         this.clientFile = client.getClientFile();
-        sendFile = client.isSendFile();
     }
 
     @Override
     public void run() {
-        while (alive && !sendFile) {  // 接收客户端socket发送的消息,如果发文件，要关闭这里的监听
+        //这里要实时判断，所以不能使用该类的变量
+        while (alive && !client.isSendFile()) {  // 接收客户端socket发送的消息,如果发文件，要关闭这里的监听
             try {
                 int len = is.read(buffer);  // 假设数据都是一次读完，不存在组包
                 if (len == -1) {  // 客户端socket已经关闭
@@ -107,7 +107,11 @@ public class ClientSocketThread extends Thread {
                 //
                 // }
                 logger.info(data);
-                client.setSendFile(true);
+                client.setSendFile(true);//所有多设置为true
+                if(!client.isSendClient()) {//确认发送文件的客户端不能接收文件
+                    clientFile.getClientFile();
+                }
+
                 break;
             default:
                 logger.info("invalid type");
