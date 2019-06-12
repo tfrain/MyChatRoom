@@ -40,7 +40,6 @@ public class ClientSocketThread extends Thread {
 
     @Override
     public void run() {
-        //这里要实时判断，所以不能使用该类的变量
         while (alive && !client.isSendFile()) {  // 接收客户端socket发送的消息,如果发文件，要关闭这里的监听
             try {
                 int len = is.read(buffer);  // 假设数据都是一次读完，不存在组包
@@ -79,14 +78,13 @@ public class ClientSocketThread extends Thread {
 
         switch (type) {
             case MsgType.LIST_ROOM:
-                //使用GSON解析一段JSON数组时，需要借助TypeToken将期望解析成的数据类型传入到fromJson()方法中
                 List<Room> rooms = gson.fromJson(data, new TypeToken<List<Room>>() {
                 }.getType());
                 printRooms(rooms);
                 break;
             case MsgType.JOIN_ROOM:
                 logger.info("joined chat room " + data + " successfully");
-                client.setChatRoom(data);//调用这个线程的客户端方法
+                client.setChatRoom(data);
                 break;
             case MsgType.QUIT_ROOM:
                 logger.info("quit chat room successfully");
@@ -101,17 +99,11 @@ public class ClientSocketThread extends Thread {
                 System.out.println(chatMsg.getUser() + ": " + chatMsg.getMsg() + "    " + chatMsg.getDate().toLocaleString());
                 break;
             case MsgType.SEND_FILE:
-                // if(clientFile.getClientFile()) {
-                //     FileMsg fileMsg = gson.fromJson(data,FileMsg.class);
-                //     logger.info("======== 文件接收成功 [File Name：" + fileMsg.getFileName() + "] [Size：" + fileMsg.getFileSize() + "] [Time：" + fileMsg.getDate().toLocaleString()+"] ========");
-                //
-                // }
                 logger.info(data);
                 client.setSendFile(true);//所有多设置为true
                 if(!client.isSendClient()) {//确认发送文件的客户端不能接收文件
                     clientFile.getClientFile();
                 }
-
                 break;
             default:
                 logger.info("invalid type");

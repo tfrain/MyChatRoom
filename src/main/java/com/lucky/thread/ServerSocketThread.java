@@ -72,7 +72,7 @@ public class ServerSocketThread extends Thread {
     public void run() {
         while (alive && !sendFile) {  // 接收客户端socket发送的消息
             try {
-                System.out.println("聊天线程在接收信息");
+                System.out.println("聊天业务流正在接收信息");
                 int len = bis.read(buffer);  // 假设数据都是一次读完，不存在组包
                 if (len == -1) {  // 客户端socket已经关闭,服务端也相应关闭
                     close();
@@ -105,19 +105,15 @@ public class ServerSocketThread extends Thread {
         setSendFile(true);
     }
 
-    public InputStream getIs() {
-        return is;
-    }
-
-    public OutputStream getOs() {
-        return os;
-    }
-
     public Socket getSocket() {
         return socket;
     }
     public boolean getAlive() {
         return alive;
+    }
+
+    public boolean isSendFile() {
+        return sendFile;
     }
 
     public void setSendFile(boolean sendFile) {
@@ -184,12 +180,9 @@ public class ServerSocketThread extends Thread {
                         server.deliverFileMsg(chatRoom, Ok);
                         System.out.println("第二遍服务端没问题");
                         setSendFile(true);//确保这里不会接收信息
-                        server.deliverfile(chatRoom, socket,serverFile.getServerFile(true));
+                        server.deliverfile(chatRoom, socket,serverFile.getServerFile(this));
                         setSendFile(false);
                     }
-
-                    // bis.close();
-                    // bos.close();
                 } catch (Exception e) {
                     sendMsgWithType(type, ResponseStatus.FAIL, e.getMessage());
                 }

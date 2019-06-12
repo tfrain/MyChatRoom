@@ -17,7 +17,6 @@ public class ServerFile {
     private String fileName;
     private long fileLength;
     private StringBuilder fileContent;
-    private boolean sendFile;
 
     private Socket socket;
     public ServerFile(Socket socket, boolean alive) {
@@ -26,39 +25,41 @@ public class ServerFile {
         fileContent = new StringBuilder();
     }
 
-    public String getServerFile(boolean sendFile) {
-        this.sendFile = sendFile;
+    public String getServerFile(ServerSocketThread sst) {
         System.out.println("服务端开始接收文件字节流,业务聊天流应当关闭");
         try {
-            //此处可疑
-            dis = new DataInputStream(socket.getInputStream());
-            dos = new DataOutputStream(socket.getOutputStream());
+            if (alive && sst.isSendFile()) {
+                //此处可疑
+                dis = new DataInputStream(socket.getInputStream());
 
-            // 文件名和长度
-            fileName = dis.readUTF();
-            fileLength = dis.readLong();
+                //文件名和长度
+                fileName = dis.readUTF();
+                fileLength = dis.readLong();
 
-            // 开始接收文件
-            byte[] bytes = new byte[1024];
-            int length = 0;
-            while (alive && sendFile && (length = dis.read(bytes, 0, bytes.length)) != -1) {
-                //fos.write(bytes, 0, length);
-                //fos.flush();
-                fileContent.append(new String(bytes,0,length));
+                // 开始接收文件
+                byte[] bytes = new byte[1024];
+                int length;
+                while ((length = dis.read(bytes, 0, bytes.length)) != -1) {
+                    fileContent.append(new String(bytes,0,length));
+                    //System.out.println(fileContent);
+                    break;
+                }
+                System.out.println("服务端收到了文件字节流");
+                //确保接收文件后他可以正常继续流转信息
+                sst.setSendFile(false);
             }
-            System.out.println("服务端收到了文件字节流");
 
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                // if (fos != null)
-                //     fos.close();
-                if (dis != null)
-                    dis.close();
-            } catch (Exception e) {
-            }
-        }
+        } //finally {
+            // try {
+            //     // if (fos != null)
+            //     //     fos.close();
+            //     if (dis != null)
+            //         dis.close();
+            // } catch (Exception e) {
+            // }
+        //}
         return fileName;
     }
 
@@ -67,7 +68,7 @@ public class ServerFile {
         this.socket = otherSocket.getSocket();
         otherSocket.setSendFile(true);
 
-        if(alive && sendFile) {//因为只一次，所以 alive 的意义不大,不用在while语句中添加
+        if(alive && otherSocket.isSendFile()) {//因为只一次，所以 alive 的意义不大,不用在while语句中添加
             try {//都放到try catch块里
                 System.out.println("开始向异服务端发文件");
                 dos = new DataOutputStream(socket.getOutputStream());
@@ -78,26 +79,36 @@ public class ServerFile {
                 dos.writeLong(fileLength);
                 dos.flush();
                 //再进行切割感觉意义不大，就没有实现
-                //todo 可以提示哪个用户传文件，哪个用户获取文件
-                //todo 将fileContent内容转换为byte传输过去
-                byte[] bytesl;
-                bytesl = fileContent.toString().getBytes();
+                byte[] bytes;
+                bytes = fileContent.toString().getBytes();
 
-                //todo 这里有问题
-                System.out.println(bytesl);
-                dos.write(bytesl);//todo 咨询老师，有没有传递大文件的好方法，将Stringbuilder切割成byte,这里sendFile立刻设置为false，会不妥
+                //System.out.println(new String(bytes));
+                dos.write(bytes);
                 dos.flush();
-                sendFile = false;
                 System.out.println("异服务端发文件成功！");
+                fileContent.delete(0, fileContent.length());
                 otherSocket.setSendFile(false);
             } catch (Exception e) {
                 e.printStackTrace();//考虑使用报错良好的报错功能
-            } finally {
+            } //finally {
                 // if(fis != null)
                 //     fis.close();
-                if(dos != null)
-                   dos.close();
+            //     if(dos != null)
+            //        dos.close();
+            // }
+        }
+    }
+
+    public void close() {
+        try {
+            alive = false;
+            if (socket != null && !socket.isClosed()) {
+                dis.close();
+                dos.close();
+                socket.close();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

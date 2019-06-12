@@ -218,8 +218,7 @@ public class Client {
             }
             try {
                 if(sendFile) {
-                    sendClient = clientFile.SendClientFile(splited[1], sendFile);
-                    sendFile = false;//确保发送文件端sendFile为false,因为发送端不可能接收文件
+                    sendClient = clientFile.SendClientFile(splited[1],this);
                 } else {
                     sendMsg(type);//确认是7
                     setSendClient(true);//确保发送文件 客户端不会开启接收文件流
@@ -271,7 +270,7 @@ public class Client {
 
     private void sendMsg(char msg) {
         try {
-            os.write(msg);//todo 这里面为什么不要关闭输出流
+            os.write(msg);
         } catch (IOException e) {
             alive = false;
             reconnect();

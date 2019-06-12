@@ -7,7 +7,9 @@
 
 
 ## todo
-- 项目中应该只出现独一无二的 socket.getInputStream （今天在这里gg了）
+- 主线程必须创建房间，第二个线程来发送文件
+- 客户端每次接收完文件都会显示invalid type信息
+- 可以设置byte后面的整数，方便传输大文件，默认为4吧
 ## 启动
 ### 1:启动服务器
 - 根据实际情况修改 *resources/server.properties* 下的配置文件

@@ -175,6 +175,7 @@ public class Server {
 
             if (!otherSocket.getSocket().equals(socket)) {
                 System.out.println("可以向异客户端发文件");
+                otherSocket.setSendFile(true);
                 serverFile.sendServerFile(otherSocket);
                 logger.info("user-" + otherSocket.getId() + " has been sent a file named " + fileName +" at " + roomName);
                 //otherSocket.sendFileMsg(gson.toJson(new FileMsg(serverFile.getFileName(), serverFile.getFileLength(),new Date())));

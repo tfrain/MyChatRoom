@@ -24,8 +24,7 @@ public class ClientFile {
     private FileInputStream fis;
     private FileOutputStream fos;
     private DataInputStream dis;
-    private DataOutputStream dos;//对我而言，好处是传文件名
-    private Socket socket;
+    private DataOutputStream dos;
     private  boolean alive;
     private boolean sendFile;
 
@@ -40,15 +39,13 @@ public class ClientFile {
 
     public ClientFile(Client client) {
         this.client = client;
-        this.socket = client.getSocket();
+        //this.socket = client.getSocket();
         alive = client.isAlive();
     }
 
-    public boolean SendClientFile(String sourcePath, boolean sendFile) throws Exception {
+    public boolean SendClientFile(String sourcePath, Client client) throws Exception {
 
-        this.sendFile = sendFile;
-
-        if(alive && sendFile) {//因为只一次，所以 alive 的意义不大,不用在while语句中添加
+        if(alive && client.isSendFile()) {//因为只一次，所以 alive 的意义不大,不用在while语句中添加
             try {//都放到try catch块里
                 File file = new File(sourcePath);
                 if(file.exists()) {
@@ -57,33 +54,37 @@ public class ClientFile {
 
                     //文件名、长度
                     dos.writeUTF(file.getName());
+                    System.out.println(file.getName());
                     dos.flush();
                     dos.writeLong(file.length());
                     dos.flush();
                     //再进行切割感觉意义不大，就没有实现
 
                     logger.info("======== 开始传输文件 ========");
+                    //可以设置byte后面的整数，方便传输大文件，默认为4吧
                     byte[] bytes = new byte[1024];
-                    int length = 0;
+                    int length;
                     long progress = 0;
                     while((length  = fis.read(bytes, 0, bytes.length)) != -1) {
                         //dos.writeBytes(bytes.toString());
                         dos.write(bytes, 0, length);
                         dos.flush();
+                        System.out.println(new String(bytes));
                         progress += length;
                         logger.info("| " + (100*progress/file.length()) + "% |");
+                        break;
                     }
                     logger.info("======== 文件传输成功 ========");
-
+                    client.setSendFile(false);
                 }
             } catch (Exception e) {
-                e.printStackTrace();//考虑使用报错良好的报错功能
-            } finally {//发送后立即关闭
-                if(fis != null)
-                    fis.close();
-                if(dos != null)
-                    dos.close();
-            }
+                e.printStackTrace();
+            } //finally {//发送后立即关闭
+            //     if(fis != null)
+            //         fis.close();
+            //     if(dos != null)
+            //         dos.close();
+            // }
         }
         return true;
     }
@@ -105,31 +106,30 @@ public class ClientFile {
 
 
                 File file = new File(directory.getAbsolutePath() + "/" + fileName);
-                System.out.println(file);
                 fos = new FileOutputStream(file);
 
                 // 开始接收文件
                 byte[] bytes = new byte[1024];
-                int length = 0;
-                while (sendFile && (length = dis.read(bytes, 0, bytes.length)) != -1) {
+                int length;
+                while (client.isSendClient() && ((length = dis.read(bytes, 0, bytes.length)) != -1)) {
                     fos.write(bytes, 0, length);
                     fos.flush();
-
+                    System.out.println(new String(bytes));
+                    break;
                 }
                 logger.info("======== 文件接收成功 [File Name：" + fileName + "] [Size：" + getFormatFileSize(fileLength) + "] ========");
-                sendFile = false;
                 client.setSendFile(false);//确保接收文件的客户端接收完毕后可以正常聊天
             } catch (Exception e) {
                 e.printStackTrace();
-             } finally {
-                try {
-                    if (fos != null)
-                        fos.close();
-                    if (dis != null)
-                        dis.close();
-                } catch (Exception e) {
-                }
-            }
+             } //finally {
+            //     try {
+            //         if (fos != null)
+            //             fos.close();
+            //         if (dis != null)
+            //             dis.close();
+            //     } catch (Exception e) {
+            //     }
+            // }
         }
 
     /**
