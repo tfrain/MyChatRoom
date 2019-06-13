@@ -218,23 +218,24 @@ public class Client {
             }
             try {
                 if(sendFile) {
-                    sendClient = clientFile.SendClientFile(splited[1],this);
+                    clientFile.SendClientFile(splited[1],this);
+                    setSendClient(false);
+                    setSendFile(false);
+                    return;//就此打住，没有不行
                 } else {
                     sendMsg(type);//确认是7
-                    setSendClient(true);//确保发送文件 客户端不会开启接收文件流
+                    setSendClient(true);
+                    return;
                 }
-                //clientFile.SendClientFile(splited[1]);//单开文件流
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return;//不至于输出流冲突
         }
 
         if (type == MsgType.QUIT_SYSTEM) {
             close();
             return;
         }
-
         logger.info("invalid type of message");
         printInfo();
     }
@@ -320,7 +321,7 @@ public class Client {
         System.out.println("4创建房间: input '#4 {roomName}' to create a chat room");
         System.out.println("5退出聊天: input '#5' to start chatting");
         System.out.println("6关闭本客户端: input '#6' to quit system");
-        System.out.println("7文件传输: input '#7 then #7 {sourcePath}' to send a file");
+        System.out.println("7文件传输: input '#7 then input #7 {sourcePath}' to send a file");
         System.out.println("------------------------------");
     }
 

@@ -12,8 +12,6 @@ public class ServerFile {
     private DataInputStream dis;
     private DataOutputStream dos;
 
-    private boolean alive;
-
     private String fileName;
     private long fileLength;
     private StringBuilder fileContent;
@@ -21,14 +19,13 @@ public class ServerFile {
     private Socket socket;
     public ServerFile(Socket socket, boolean alive) {
         this.socket = socket;
-        this.alive = alive;
         fileContent = new StringBuilder();
     }
 
     public String getServerFile(ServerSocketThread sst) {
         System.out.println("服务端开始接收文件字节流,业务聊天流应当关闭");
         try {
-            if (alive && sst.isSendFile()) {
+            if (sst.getAlive() && sst.isSendFile()) {
                 //此处可疑
                 dis = new DataInputStream(socket.getInputStream());
 
@@ -68,7 +65,7 @@ public class ServerFile {
         this.socket = otherSocket.getSocket();
         otherSocket.setSendFile(true);
 
-        if(alive && otherSocket.isSendFile()) {//因为只一次，所以 alive 的意义不大,不用在while语句中添加
+        if(otherSocket.getAlive() && otherSocket.isSendFile()) {//因为只一次，所以 alive 的意义不大,不用在while语句中添加
             try {//都放到try catch块里
                 System.out.println("开始向异服务端发文件");
                 dos = new DataOutputStream(socket.getOutputStream());
@@ -101,11 +98,10 @@ public class ServerFile {
 
     public void close() {
         try {
-            alive = false;
             if (socket != null && !socket.isClosed()) {
                 dis.close();
                 dos.close();
-                socket.close();
+                //socket.close();
             }
         } catch (Exception e) {
             e.printStackTrace();

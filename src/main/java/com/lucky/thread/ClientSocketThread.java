@@ -27,7 +27,6 @@ public class ClientSocketThread extends Thread {
     private byte[] buffer = new byte[1024];
     private String message;
     ClientFile clientFile;
-    private boolean sendFile;
     private Gson gson = new Gson();//有各自的gson
 
     public ClientSocketThread(Client client) {
@@ -96,13 +95,16 @@ public class ClientSocketThread extends Thread {
                 break;
             case MsgType.CHAT:
                 ChatMsg chatMsg = gson.fromJson(data, ChatMsg.class);
-                System.out.println(chatMsg.getUser() + ": " + chatMsg.getMsg() + "    " + chatMsg.getDate().toLocaleString());
+                System.out.println(chatMsg.getUser() + ": " + chatMsg.getMsg() + "    " + chatMsg.getDate());
                 break;
             case MsgType.SEND_FILE:
                 logger.info(data);
                 client.setSendFile(true);//所有多设置为true
-                if(!client.isSendClient()) {//确认发送文件的客户端不能接收文件
+                if(!client.isSendClient()) {//确认发送文件的客户端不能接收文件,为第一步#7而存在
                     clientFile.getClientFile();
+                    System.out.println("接收文件结束，进入正常业务流模式");
+                } else {
+                    System.out.println("发送客户端不能接收文件流");
                 }
                 break;
             default:

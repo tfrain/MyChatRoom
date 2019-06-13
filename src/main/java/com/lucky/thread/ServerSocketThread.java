@@ -30,8 +30,6 @@ public class ServerSocketThread extends Thread {
     private boolean sendFile;
     private InputStream is;
     private OutputStream os;
-   // private DataInputStream dis;
-    //private DataOutputStream dos;
 
 
     private boolean alive;
@@ -40,7 +38,6 @@ public class ServerSocketThread extends Thread {
     private String chatRoom = "";
     private Gson gson = new Gson();
     private ServerFile serverFile;
-    //private String fileName;
 
     public ServerSocketThread(Socket socket, Server server, ServerFile serverFile) {
         this.socket = socket;
@@ -49,11 +46,6 @@ public class ServerSocketThread extends Thread {
         sendFile = false;
 
         try {
-            // dis = new DataInputStream(socket.getInputStream());//本套接字
-            // fileName = dis.readUTF();
-            // if(fileName == null) {
-            //
-            // }
             if(!sendFile) {
                 is = socket.getInputStream();
                 os = socket.getOutputStream();
@@ -174,14 +166,13 @@ public class ServerSocketThread extends Thread {
                 break;
             case MsgType.SEND_FILE:
                 try {
-                    //服务器端创建中转站,获取中转站文件全路径,已经在中转站创建文件
                     if(!sendFile) {
                         String Ok = "The server is ready";
                         server.deliverFileMsg(chatRoom, Ok);
                         System.out.println("第二遍服务端没问题");
                         setSendFile(true);//确保这里不会接收信息
                         server.deliverfile(chatRoom, socket,serverFile.getServerFile(this));
-                        setSendFile(false);
+                        System.out.println("中转文件结束！");
                     }
                 } catch (Exception e) {
                     sendMsgWithType(type, ResponseStatus.FAIL, e.getMessage());
@@ -195,14 +186,13 @@ public class ServerSocketThread extends Thread {
     private void sendMsgWithType(char type, char status, String data) {
         try {
             if(!sendFile) {//确保异客户端写文件不冲突
-
                 StringBuilder sb = new StringBuilder();
                 sb.append(type).append(status).append(data);
                 bos.write(sb.toString().getBytes());
                 bos.flush();     // 使用bufferOutputStream要记得flush,不然就没用到缓冲的作用
             }
         } catch (IOException e) {
-            close();
+            close();//todo 学习close的用法
             e.printStackTrace();
         }
     }

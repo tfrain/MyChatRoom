@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.net.Socket;
 import java.io.DataInputStream;
 import java.io.FileOutputStream;
 import java.math.RoundingMode;
@@ -26,13 +25,12 @@ public class ClientFile {
     private DataInputStream dis;
     private DataOutputStream dos;
     private  boolean alive;
-    private boolean sendFile;
 
 
     static {
         // 设置数字格式，保留一位有效小数
         df = new DecimalFormat("#0.0");
-        df.setRoundingMode(RoundingMode.HALF_UP);
+        //df.setRoundingMode(RoundingMode.HALF_UP);
         df.setMinimumFractionDigits(1);
         df.setMaximumFractionDigits(1);
     }
@@ -43,9 +41,9 @@ public class ClientFile {
         alive = client.isAlive();
     }
 
-    public boolean SendClientFile(String sourcePath, Client client) throws Exception {
+    public void SendClientFile(String sourcePath, Client client) throws Exception {
 
-        if(alive && client.isSendFile()) {//因为只一次，所以 alive 的意义不大,不用在while语句中添加
+        if(alive && client.isSendFile()) {
             try {//都放到try catch块里
                 File file = new File(sourcePath);
                 if(file.exists()) {
@@ -54,11 +52,9 @@ public class ClientFile {
 
                     //文件名、长度
                     dos.writeUTF(file.getName());
-                    System.out.println(file.getName());
                     dos.flush();
                     dos.writeLong(file.length());
                     dos.flush();
-                    //再进行切割感觉意义不大，就没有实现
 
                     logger.info("======== 开始传输文件 ========");
                     //可以设置byte后面的整数，方便传输大文件，默认为4吧
@@ -66,7 +62,6 @@ public class ClientFile {
                     int length;
                     long progress = 0;
                     while((length  = fis.read(bytes, 0, bytes.length)) != -1) {
-                        //dos.writeBytes(bytes.toString());
                         dos.write(bytes, 0, length);
                         dos.flush();
                         System.out.println(new String(bytes));
@@ -75,8 +70,10 @@ public class ClientFile {
                         break;
                     }
                     logger.info("======== 文件传输成功 ========");
-                    client.setSendFile(false);
+                } else {
+                    logger.info("invalid sourcePath!");
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
             } //finally {//发送后立即关闭
@@ -86,7 +83,6 @@ public class ClientFile {
             //         dos.close();
             // }
         }
-        return true;
     }
 
     public void getClientFile() {
@@ -111,7 +107,7 @@ public class ClientFile {
                 // 开始接收文件
                 byte[] bytes = new byte[1024];
                 int length;
-                while (client.isSendClient() && ((length = dis.read(bytes, 0, bytes.length)) != -1)) {
+                while (client.isSendFile() && ((length = dis.read(bytes, 0, bytes.length)) != -1)) {
                     fos.write(bytes, 0, length);
                     fos.flush();
                     System.out.println(new String(bytes));
